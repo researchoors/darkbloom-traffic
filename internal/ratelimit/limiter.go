@@ -27,6 +27,14 @@ func NewLimiter(rps float64) *Limiter {
 func (l *Limiter) Wait(ctx context.Context) error {
 	l.mu.Lock()
 
+	// Check for an already-cancelled context before doing any work.
+	select {
+	case <-ctx.Done():
+		l.mu.Unlock()
+		return ctx.Err()
+	default:
+	}
+
 	elapsed := time.Since(l.last)
 	remaining := l.interval - elapsed
 
