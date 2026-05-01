@@ -1,3 +1,3 @@
 module github.com/researchoors/darkbloom-traffic
 
-go 1.26.2
+go 1.24
